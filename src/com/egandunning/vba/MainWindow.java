@@ -1,15 +1,19 @@
 package com.egandunning.vba;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -18,9 +22,10 @@ public class MainWindow {
 	private JFrame frame;
 	private JTextArea inputTextArea;
 	private JTextArea outputTextArea;
+	private JCheckBox liveUpdate;
+	private JTextField varName;
 	
 	public MainWindow() {
-		
 		init();
 	}
 	
@@ -34,13 +39,15 @@ public class MainWindow {
 		inputTextArea = new JTextArea(30, 50);
 		outputTextArea = new JTextArea(30, 50);
 		
+		int fontSize = inputTextArea.getFont().getSize();
+		
+		inputTextArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize));
+		outputTextArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize));
+		
 		inputTextArea.getDocument().addDocumentListener(new DocumentListener() {
 
 			@Override
-			public void insertUpdate(DocumentEvent e) {
-//				int beginIndex = e.getOffset();
-//				int getEndIndex = beginIndex + e.getLength();
-				
+			public void insertUpdate(DocumentEvent e) {				
 				updateText();
 			}
 
@@ -55,27 +62,40 @@ public class MainWindow {
 			}
 			
 		});
-				
+		
+		liveUpdate = new JCheckBox("Live update?");
+		liveUpdate.setSelected(true);
+		
+		varName = new JTextField("myVar");
+		
 		JScrollPane inputScrollPane = new JScrollPane(inputTextArea);
 		inputScrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		JScrollPane outputScrollPane = new JScrollPane(outputTextArea);
 		outputScrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		
-		int fontSize = inputTextArea.getFont().getSize();
-		
-		inputTextArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize));
-		outputTextArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize));
-				
 		GridLayout layout = new GridLayout(1, 2);
 
 		JPanel inputPane = new JPanel();
 		inputPane.setLayout(new BoxLayout(inputPane, BoxLayout.Y_AXIS));
-		inputPane.add(new JLabel("Add text here"));
+		
+		JPanel inputControls = new JPanel();
+		inputControls.setLayout(new BoxLayout(inputControls, BoxLayout.X_AXIS));
+		inputControls.add(new JLabel("Add text here"));
+		
+		
+		inputPane.add(inputControls);
 		inputPane.add(inputScrollPane);
 		
 		JPanel outputPane = new JPanel();
 		outputPane.setLayout(new BoxLayout(outputPane, BoxLayout.Y_AXIS));
-		outputPane.add(new JLabel(" "));
+		
+		JPanel outputControls = new JPanel();
+		outputControls.setLayout(new BoxLayout(outputControls, BoxLayout.X_AXIS));
+		outputControls.add(liveUpdate);
+		outputControls.add(Box.createRigidArea(new Dimension(5,0)));
+		outputControls.add(varName);
+		
+		outputPane.add(outputControls);
 		outputPane.add(outputScrollPane);
 		
 		frame.getContentPane().setLayout(layout);
@@ -89,7 +109,9 @@ public class MainWindow {
 	}
 	
 	private void updateText() {
-		outputTextArea.setText(ConvertText.toVbaString(inputTextArea.getText()));
+		if(liveUpdate.isSelected()) {
+			outputTextArea.setText(ConvertText.toVbaString(inputTextArea.getText(), varName.getText()));
+		}
 	}
 	
 }
