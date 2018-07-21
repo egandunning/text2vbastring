@@ -2,7 +2,7 @@ package com.egandunning.vba;
 
 public class ConvertText {
 
-	public static int maxVbaLineContinue = 10;
+	public static int maxVbaLineContinue = 25;
 	public static int maxLineLength = 200;
 	public static int lineBreakPosition = maxLineLength - 7;
 	
