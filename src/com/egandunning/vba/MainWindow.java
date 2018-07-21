@@ -36,8 +36,8 @@ public class MainWindow {
 		frame.setSize(800, 600);
 		frame.setResizable(true);
 		
-		inputTextArea = new JTextArea(30, 50);
-		outputTextArea = new JTextArea(30, 50);
+		inputTextArea = new JTextArea(1, 1);
+		outputTextArea = new JTextArea(1, 1);
 		
 		int fontSize = inputTextArea.getFont().getSize();
 		
@@ -67,6 +67,11 @@ public class MainWindow {
 		liveUpdate.setSelected(true);
 		
 		varName = new JTextField("myVar");
+		varName.setMinimumSize(new Dimension(100, 20));
+		varName.setMaximumSize(new Dimension(1000, 20));
+		
+		JLabel inputLabel = new JLabel("Add text here");
+		inputLabel.setMaximumSize(new Dimension(100, 20));
 		
 		JScrollPane inputScrollPane = new JScrollPane(inputTextArea);
 		inputScrollPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -80,7 +85,8 @@ public class MainWindow {
 		
 		JPanel inputControls = new JPanel();
 		inputControls.setLayout(new BoxLayout(inputControls, BoxLayout.X_AXIS));
-		inputControls.add(new JLabel("Add text here"));
+		inputControls.add(Box.createRigidArea(new Dimension(0,24)));
+		inputControls.add(inputLabel);
 		
 		
 		inputPane.add(inputControls);
@@ -103,7 +109,6 @@ public class MainWindow {
 		frame.getContentPane().add(outputPane);
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.pack();
 		
 		frame.setVisible(true);
 	}
